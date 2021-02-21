@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sanda.dao.MenuDao">
+
+    <resultMap id="BaseResultMap" type="cn.edu.sanda.entity.Menu">
+        <!--@Table menu-->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="pid" column="pid" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="herf" column="herf" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="spread" column="spread" jdbcType="VARCHAR"/>
+        <result property="available" column="available" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          id, pid, title, herf, icon, spread, available
+        from springmanage.menu
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          id, pid, title, herf, icon, spread, available
+        from springmanage.menu
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          id, pid, title, herf, icon, spread, available
+        from springmanage.menu
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="pid != null">
+                and pid = #{pid}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="herf != null and herf != ''">
+                and herf = #{herf}
+            </if>
+            <if test="icon != null and icon != ''">
+                and icon = #{icon}
+            </if>
+            <if test="spread != null and spread != ''">
+                and spread = #{spread}
+            </if>
+            <if test="available != null and available != ''">
+                and available = #{available}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into springmanage.menu(pid, title, herf, icon, spread, available)
+        values (#{pid}, #{title}, #{herf}, #{icon}, #{spread}, #{available})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update springmanage.menu
+        <set>
+            <if test="pid != null">
+                pid = #{pid},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="herf != null and herf != ''">
+                herf = #{herf},
+            </if>
+            <if test="icon != null and icon != ''">
+                icon = #{icon},
+            </if>
+            <if test="spread != null and spread != ''">
+                spread = #{spread},
+            </if>
+            <if test="available != null and available != ''">
+                available = #{available},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from springmanage.menu where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>网页头部</title>
+</head>
+<body>
+    <div th:fragment="header-body">
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Notifications Dropdown Menu -->
+
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                        <i class="fas fa-th-large"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="index3" class="brand-link">
+                <img th:src="@{../dist/img/AdminLTELogo.png}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">AdminLTE 3</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img th:src="@{../dist/img/user2-160x160.jpg}" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block">Alexander Pierce</a>
+                    </div>
+                </div>
+
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2" >
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+                             with font-awesome or any other icon font library -->
+
+                        <th:block th:each="treeNode: ${session.menuList}">
+                            <li class="nav-item">
+                                <!--一级标签-->
+                                <a th:href="${treeNode.href}" class="nav-link">
+                                    <i th:class="${treeNode.icon}"></i>
+                                    <p>
+                                        <span th:text="${treeNode.title}"></span>
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <!--二级标签-->
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <th:block th:each="treeNode1 : ${treeNode.getChildren()}" >
+                                            <a th:href="${treeNode1.getHref()}" class="nav-link"  target="my_iframe">
+                                                <i th:class="${treeNode1.icon}"></i>
+                                                <p th:text="${treeNode1.title}"></p>
+                                            </a>
+                                        </th:block>
+                                    </li>
+                                </ul>
+                            </li>
+                        </th:block>
+                    </ul>
+
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+
+    </div>
+
+    <th:block th:fragment="footer-body">
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2020 <a href="https://www.sandau.edu.cn/">杉达计算机科学与信息学院</a>.</strong>
+            All rights reserved.
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Version</b> 3.1.0-pre
+            </div>
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+
+    </th:block>
+
+    <!--加载js-->
+    <th:block th:fragment="js-body">
+        <!-- jQuery -->
+        <script th:src="@{../plugins/jquery/jquery.min.js}"></script>
+        <!-- jQuery UI 1.11.4 -->
+        <script th:src="@{../plugins/jquery-ui/jquery-ui.min.js}"></script>
+        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script>
+            $.widget.bridge('uibutton', $.ui.button)
+        </script>
+        <!-- Bootstrap 4 -->
+        <script th:src="@{../plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+        <!-- ChartJS -->
+        <script th:src="@{../plugins/chart.js/Chart.min.js}"></script>
+        <!-- Sparkline -->
+        <script th:src="@{../plugins/sparklines/sparkline.js}"></script>
+        <!-- JQVMap -->
+        <script th:src="@{../plugins/jqvmap/jquery.vmap.min.js}"></script>
+        <script th:src="@{../plugins/jqvmap/maps/jquery.vmap.usa.js}"></script>
+        <!-- jQuery Knob Chart -->
+        <script th:src="@{../plugins/jquery-knob/jquery.knob.min.js}"></script>
+        <!-- daterangepicker -->
+        <script th:src="@{../plugins/moment/moment.min.js}"></script>
+        <script th:src="@{../plugins/daterangepicker/daterangepicker.js}"></script>
+        <!-- Tempusdominus Bootstrap 4 -->
+        <script th:src="@{../plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js}"></script>
+        <!-- Summernote -->
+        <script th:src="@{../plugins/summernote/summernote-bs4.min.js}"></script>
+        <!-- overlayScrollbars -->
+        <script th:src="@{../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js}"></script>
+        <!-- AdminLTE App -->
+        <script th:src="@{../dist/js/adminlte.js}"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script th:src="@{../dist/js/demo.js}"></script>
+        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        <script th:src="@{../dist/js/pages/dashboard.js}"></script>
+    </th:block>
+</body>
+</html>

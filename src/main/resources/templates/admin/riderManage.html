@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>后台管理系统</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" th:href="@{../plugins/fontawesome-free/css/all.min.css}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" th:href="@{../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}">
+  <!-- iCheck -->
+  <link rel="stylesheet" th:href="@{../plugins/icheck-bootstrap/icheck-bootstrap.min.css}">
+  <!-- JQVMap -->
+  <link rel="stylesheet" th:href="@{../plugins/jqvmap/jqvmap.min.css}">
+  <!-- Theme style -->
+  <link rel="stylesheet" th:href="@{../dist/css/adminlte.min.css}">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" th:href="@{../plugins/overlayScrollbars/css/OverlayScrollbars.min.css}">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" th:href="@{../plugins/daterangepicker/daterangepicker.css}">
+  <!-- summernote -->
+  <link rel="stylesheet" th:href="@{../plugins/summernote/summernote-bs4.min.css}">
+</head>
+<body>
+
+    <div style="height: 10px"></div>
+
+    <div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-body">
+
+            <div class="input-group mb-3  input-medium">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">工号</span>
+                </div>
+                <input type="text" class="form-control "  id="adminAccout" name="工号">
+
+                <div style="width: 10px"></div>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">姓名</span>
+                </div>
+                <input type="text" class="form-control  "  id="adminName" name="姓名">
+
+                <div style="width: 10px"></div>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">手机</span>
+                </div>
+                <input type="text" class="form-control "  id="adminPhone" name="手机">
+
+            </div>
+
+            <div class="input-group mb-3  input-medium">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">性别</span>
+                </div>
+                <input type="text" class="form-control "  id="adminGender" name="性别">
+
+                <!--                        <div class="col-md-6"></div>-->
+                <div style="width: 10px"></div>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">归属区域</span>
+                </div>
+                <input type="text" class="form-control "  id="adminAddress" name="手机">
+
+                <div style="width: 10px"></div>
+                <button type="button" style="width: 200px" id="searchbtn" class="btn btn-primary" >查询</button>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+    <div class="container-fluid">
+    <div class="card-body" style="height: 1000px">
+
+        <table  class="table  table-striped" id="admintable" ></table>
+
+    </div>
+    </div>
+
+    <div style="height: 50px"></div>
+
+    </div>
+
+
+    <!-- common-JS -->
+    <div th:replace="admin/header::js-body"></div>
+    <!-- /common-JS -->
+
+
+
+    <!--加载表格-->
+    <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+    <script src="https://cdn.staticfile.org/bootstrap-table/1.13.5/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script>
+        $(document).ready(function () {
+             getTable();
+        })
+
+        $("#searchbtn").click(function () {
+            var adminAccout =$('#adminAccout').val();
+            var adminName =$('#adminName').val();
+            var adminPhone =$('#adminPhone').val();
+            var adminGender =$('#adminGender').val();
+            var adminAddress =$('#adminAddress').val();
+            
+            $('#admintable').bootstrapTable('refresh',{
+                query:
+                    {
+                        "adminAccout":adminAccout,
+                        "adminName":adminName,
+                        "adminPhone":adminPhone,
+                        "adminGender":adminGender,
+                        "adminAddress":adminAddress
+                    }
+            });
+
+        })
+
+        function getTable(){
+                $('#admintable').bootstrapTable({
+
+                    method: 'GET',
+                    url: '../admin/riderManageNumber',
+                    toolbar: "#toolbar",
+                    uniqueId: "id",
+                    pagination: true,//是否分页
+                    sidePagination: 'client',//server:服务器端分页|client：前端分页
+                    pageSize: 5,//单页记录数
+                    pageList: [3, 5, 10],//可选择单页记录数
+
+
+                    columns: [
+                        {
+                            field: 'adminAccout',
+                            title:'骑手账户',
+                            align: 'center',
+                        },
+                        {
+                            field: 'adminPhoto',
+                            title:'骑手头像',
+                            align: 'center',
+                            formatter : function(value, row, index) {
+                                var image = '<img style="width: 60px;height: 60px" class="feed-photo" src='+value+'>'
+                                ;
+                                return image;
+                            }
+                        },{
+                            field: 'adminName',
+                            title:'骑手姓名',
+                            align: 'center',
+                        },{
+                            field: 'adminPhone',
+                            title:'骑手手机',
+                            align: 'center',
+                        }, {
+                            field: 'adminGender',
+                            title:'骑手性别',
+                            align: 'center',
+                            formatter: function (value, row, index) {
+                                if(value==1){
+                                    return "女";
+                                }else {
+                                    return "男";
+                                }
+                            }
+                        },{
+                            field: 'adminAddress',
+                            title:'负责地区',
+                            align: 'center',
+                        },{
+                            field: 'blogId',
+                            title: '操作',
+                            align: 'center',
+                            events: operateEvents,
+                            formatter: function (value, row, index) {
+                                var html = "<button type='button' id='disablebtn' class='btn btn-danger btn-sm' >禁用</button>&nbsp;&nbsp;<button type='button'  id='updatebtn' class='btn  btn-info btn-sm'>修改</button>&nbsp;&nbsp;";
+                                return html;
+                            }
+                        }
+                    ]
+
+                })
+        }
+
+
+        window.operateEvents = {
+            'click #disablebtn': function (e, value, row, index) {
+              alert(row.adminAccout+"禁用");
+            },
+
+            'click #updatebtn': function (e, value, row, index) {
+                alert(row.adminAccout+"修改");
+            }
+        };
+    </script>
+
+
+</body>
+</html>
