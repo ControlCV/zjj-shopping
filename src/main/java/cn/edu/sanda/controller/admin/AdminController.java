@@ -81,7 +81,7 @@ public class AdminController {
 
         System.out.println(riderManageRequestVo);
         QueryWrapper<Admin> adminQueryWrapper = new QueryWrapper<>();
-        adminQueryWrapper.eq("admin_type","1");
+        adminQueryWrapper.eq("admin_type","1").eq("admin_status","0");
 
         if(riderManageRequestVo.getAdminAccout()!=null){
             adminQueryWrapper.like("admin_accout",riderManageRequestVo.getAdminAccout());

@@ -38,21 +38,21 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">工号</span>
                 </div>
-                <input type="text" class="form-control "  id="adminAccout" name="工号">
+                <input type="text" class="form-control " placeholder="请输入骑手工号"  id="adminAccout" name="工号">
 
                 <div style="width: 10px"></div>
 
                 <div class="input-group-prepend">
                     <span class="input-group-text">姓名</span>
                 </div>
-                <input type="text" class="form-control  "  id="adminName" name="姓名">
+                <input type="text" class="form-control  "  placeholder="请输入骑手姓名" id="adminName" name="姓名">
 
                 <div style="width: 10px"></div>
 
                 <div class="input-group-prepend">
                     <span class="input-group-text">手机</span>
                 </div>
-                <input type="text" class="form-control "  id="adminPhone" name="手机">
+                <input type="text" class="form-control " placeholder="请输入骑手手机"  id="adminPhone" name="手机">
 
             </div>
 
@@ -60,7 +60,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">性别</span>
                 </div>
-                <input type="text" class="form-control "  id="adminGender" name="性别">
+                <input type="text" class="form-control " placeholder="请输入骑手性别"  id="adminGender" name="性别">
 
                 <!--                        <div class="col-md-6"></div>-->
                 <div style="width: 10px"></div>
@@ -68,7 +68,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">归属区域</span>
                 </div>
-                <input type="text" class="form-control "  id="adminAddress" name="手机">
+                <input type="text" class="form-control " placeholder="请输入骑手归属区域"  id="adminAddress" name="手机">
 
                 <div style="width: 10px"></div>
                 <button type="button" style="width: 200px" id="searchbtn" class="btn btn-primary" >查询</button>
@@ -85,11 +85,6 @@
 
     </div>
     </div>
-
-    <div style="height: 50px"></div>
-
-    </div>
-
 
     <!-- common-JS -->
     <div th:replace="admin/header::js-body"></div>
@@ -134,7 +129,7 @@
                     uniqueId: "id",
                     pagination: true,//是否分页
                     sidePagination: 'client',//server:服务器端分页|client：前端分页
-                    pageSize: 5,//单页记录数
+                    pageSize: 10,//单页记录数
                     pageList: [3, 5, 10],//可选择单页记录数
 
 
@@ -182,7 +177,7 @@
                             align: 'center',
                             events: operateEvents,
                             formatter: function (value, row, index) {
-                                var html = "<button type='button' id='disablebtn' class='btn btn-danger btn-sm' >黑名单</button>&nbsp;&nbsp;<button type='button'  id='updatebtn' class='btn  btn-info btn-sm'>修改</button>&nbsp;&nbsp;";
+                                var html = "<button type='button' id='disablebtn' class='btn btn-danger btn-sm' >黑名单</button>&nbsp;&nbsp;<button type='button'  id='updatebtn' class='btn  btn-info btn-sm'>重置信息</button>&nbsp;&nbsp;";
                                 return html;
                             }
                         }
@@ -194,7 +189,17 @@
 
         window.operateEvents = {
             'click #disablebtn': function (e, value, row, index) {
-              alert(row.adminAccout+"禁用");
+                var adminAccout=row.adminAccout;
+                $.ajax({
+                    type:'get',
+                    url:'../adminOperate/del',
+                    data:{"adminAccout":adminAccout},
+                    success:function(data){
+                        alert(data.msg);
+                        $('#admintable').bootstrapTable('refresh');
+                    }
+                })
+
             },
 
             'click #updatebtn': function (e, value, row, index) {

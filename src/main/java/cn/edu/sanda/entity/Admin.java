@@ -53,6 +53,10 @@ public class Admin implements Serializable {
      */
     private String adminType;
     /**
+     *
+     */
+    private String adminStatus;
+    /**
      *用户头像
      */
     private String adminPhoto;
