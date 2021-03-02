@@ -50,9 +50,9 @@
                 <div style="width: 10px"></div>
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text">手机</span>
+                    <span class="input-group-text">邮箱</span>
                 </div>
-                <input type="text" class="form-control " placeholder="请输入骑手手机"  id="adminPhone" name="手机">
+                <input type="text" class="form-control " placeholder="请输入骑手邮箱"  id="adminPhone" name="邮箱">
 
             </div>
 
@@ -68,7 +68,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">归属区域</span>
                 </div>
-                <input type="text" class="form-control " placeholder="请输入骑手归属区域"  id="adminAddress" name="手机">
+                <input type="text" class="form-control " placeholder="请输入骑手归属区域"  id="adminAddress" name="邮箱">
 
                 <div style="width: 10px"></div>
                 <button type="button" style="width: 200px" id="searchbtn" class="btn btn-primary" >查询</button>
@@ -89,6 +89,79 @@
     <!-- common-JS -->
     <div th:replace="admin/header::js-body"></div>
     <!-- /common-JS -->
+
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        骑手信息重置
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title"></h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label >工号</label>
+                                    <input class="form-control" id="accountNo" type="text" placeholder="该输入框禁止输入..." disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label >重置密码</label>
+                                    <input type="输入骑手新密码" class="form-control" id="reSetPwd" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <label >重置负责地区</label>
+                                    <select class="form-control">
+                                        <option>option 1</option>
+                                        <option>option 2</option>
+                                        <option>option 3</option>
+                                        <option>option 4</option>
+                                        <option>option 5</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">File input</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="exampleInputFile">
+                                            <label class="custom-file-label" for="exampleInputFile">选择要上传的头像</label>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Upload</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <img src="../file/fileDefult.png">
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+
+                        </form>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
 
 
 
@@ -122,7 +195,6 @@
 
         function getTable(){
                 $('#admintable').bootstrapTable({
-
                     method: 'GET',
                     url: '../admin/riderManageNumber',
                     toolbar: "#toolbar",
@@ -154,7 +226,7 @@
                             align: 'center',
                         },{
                             field: 'adminPhone',
-                            title:'骑手手机',
+                            title:'骑手邮箱',
                             align: 'center',
                         }, {
                             field: 'adminGender',
@@ -172,12 +244,18 @@
                             title:'负责地区',
                             align: 'center',
                         },{
-                            field: 'blogId',
+                            field: 'adminStatus',
                             title: '操作',
                             align: 'center',
                             events: operateEvents,
                             formatter: function (value, row, index) {
-                                var html = "<button type='button' id='disablebtn' class='btn btn-danger btn-sm' >黑名单</button>&nbsp;&nbsp;<button type='button'  id='updatebtn' class='btn  btn-info btn-sm'>重置信息</button>&nbsp;&nbsp;";
+
+                                if(value==1){
+                                    var html = "<button type='button' id='disablebtn' class='btn btn-danger btn-sm' >已拉黑</button>&nbsp;&nbsp;<button type='button'  id='updatebtn' class='btn  btn-info btn-sm'>重置信息</button>&nbsp;&nbsp;";
+                                }else {
+                                    var html = "<button type='button' id='disablebtn' class='btn btn-danger btn-sm' >黑名单</button>&nbsp;&nbsp;<button type='button'  id='updatebtn' class='btn  btn-info btn-sm'>重置信息</button>&nbsp;&nbsp;";
+                                }
+
                                 return html;
                             }
                         }
@@ -190,20 +268,31 @@
         window.operateEvents = {
             'click #disablebtn': function (e, value, row, index) {
                 var adminAccout=row.adminAccout;
+                var adminStatus=row.adminStatus;
                 $.ajax({
                     type:'get',
-                    url:'../adminOperate/del',
-                    data:{"adminAccout":adminAccout},
+                    url:'../adminOperate/reverseStatus',
+                    data:{"adminAccout":adminAccout,"adminStatus":adminStatus},
                     success:function(data){
-                        alert(data.msg);
-                        $('#admintable').bootstrapTable('refresh');
+                        if(data.code=200){
+                            if(adminStatus==1){
+                                alert("工号为"+adminAccout+"的骑手已被解封");
+                            }else{
+                                alert("工号为"+adminAccout+"的骑手已被拉黑");
+                            }
+
+                            $('#admintable').bootstrapTable('refresh');
+                        }
+
                     }
                 })
-
             },
 
             'click #updatebtn': function (e, value, row, index) {
-                alert(row.adminAccout+"修改");
+                // alert(row.adminAccout+"修改");
+
+                $('#accountNo').val(row.adminAccout);
+                $('#myModal').modal();
             }
         };
     </script>

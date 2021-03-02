@@ -79,9 +79,8 @@ public class AdminController {
     @RequestMapping("/riderManageNumber")
     public List<Admin> adminRiderManageNumber(AdminRiderManageRequestVo riderManageRequestVo) {
 
-        System.out.println(riderManageRequestVo);
         QueryWrapper<Admin> adminQueryWrapper = new QueryWrapper<>();
-        adminQueryWrapper.eq("admin_type","1").eq("admin_status","0");
+        adminQueryWrapper.eq("admin_type","1");
 
         if(riderManageRequestVo.getAdminAccout()!=null){
             adminQueryWrapper.like("admin_accout",riderManageRequestVo.getAdminAccout());

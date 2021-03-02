@@ -21,21 +21,24 @@ public class AdminOperateController {
     private AdminDao adminService;
 
     @ResponseBody
-    @RequestMapping("/del")
+    @RequestMapping("/reverseStatus")
     public ResponseVo adminOperateDel(Admin admin) {
         ResponseVo<Object> objectResponseVo = new ResponseVo<>();
-
-        System.out.println(admin);
 
         UpdateWrapper<Admin> adminUpdateWrapper = new UpdateWrapper<>();
         adminUpdateWrapper.eq("admin_accout",admin.getAdminAccout());
 
         Admin admin1 = new Admin();
-        admin1.setAdminStatus("1");
+        if("0".equals(admin.getAdminStatus())){
+            admin1.setAdminStatus("1");
+        }else{
+            admin1.setAdminStatus("0");
+        }
+
         adminService.update(admin1,adminUpdateWrapper);
 
         objectResponseVo.setCode("200");
-        objectResponseVo.setMsg("成功加入黑名单");
+        objectResponseVo.setMsg("请求成功");
         return objectResponseVo;
     }
 
