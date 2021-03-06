@@ -7,7 +7,9 @@ import cn.edu.sanda.service.MenuService;
 import cn.edu.sanda.utils.TreeNode;
 import cn.edu.sanda.utils.TreeNodeBulider;
 import cn.edu.sanda.vo.AdminRiderManageRequestVo;
+import cn.edu.sanda.vo.ResponseVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -73,7 +75,6 @@ public class AdminController {
         return  "/admin/riderManage";
     }
 
-
     //查询骑手
     @ResponseBody
     @RequestMapping("/riderManageNumber")
@@ -103,7 +104,133 @@ public class AdminController {
         return  list;
     }
 
+    //修改骑手状态
+    @ResponseBody
+    @RequestMapping("/riderManageNumber/update")
+    public ResponseVo adminRiderManageNumberUpdate(AdminRiderManageRequestVo riderManageRequestVo) {
+        ResponseVo<Object> objectResponseVo = new ResponseVo<>();
 
+        UpdateWrapper<Admin> adminUpdateWrapper = new UpdateWrapper<>();
+        adminUpdateWrapper.eq("admin_accout",riderManageRequestVo.getAdminAccout());
+
+        Admin admin = new Admin();
+        admin.setAdminAddress(riderManageRequestVo.getAdminAddress());
+        admin.setAdminPwd(riderManageRequestVo.getAdminPwd());
+        admin.setAdminPhoto(riderManageRequestVo.getAdminPhoto());
+
+        adminService.update(admin,adminUpdateWrapper);
+
+        return objectResponseVo;
+    }
+
+    //客户管理界面
+    @RequestMapping("/customerManage")
+    public String adminRiderManage() {
+        return  "/admin/customerManage";
+    }
+
+    //查询客户
+    @ResponseBody
+    @RequestMapping("/customerManageNumber")
+    public List<Admin> customerManageNumber(AdminRiderManageRequestVo riderManageRequestVo) {
+
+        QueryWrapper<Admin> adminQueryWrapper = new QueryWrapper<>();
+        adminQueryWrapper.eq("admin_type","2").eq("admin_status","0");
+
+        if(riderManageRequestVo.getAdminAccout()!=null){
+            adminQueryWrapper.like("admin_accout",riderManageRequestVo.getAdminAccout());
+        }
+        if(riderManageRequestVo.getAdminName()!=null){
+            adminQueryWrapper.like("admin_name",riderManageRequestVo.getAdminName());
+        }
+        if(riderManageRequestVo.getAdminPhone()!=null){
+            adminQueryWrapper.like("admin_phone",riderManageRequestVo.getAdminPhone());
+        }
+        if(riderManageRequestVo.getAdminGender()!=null){
+            adminQueryWrapper.like("admin_gender",riderManageRequestVo.getAdminGender());
+        }
+        if(riderManageRequestVo.getAdminAddress()!=null){
+            adminQueryWrapper.like("admin_address",riderManageRequestVo.getAdminAddress());
+        }
+
+        List<Admin> list = adminService.list(adminQueryWrapper);
+
+        return  list;
+    }
+
+    //修改客户状态
+    @ResponseBody
+    @RequestMapping("/customerManageNumber/update")
+    public ResponseVo adminCustomerManageNumberUpdate(AdminRiderManageRequestVo riderManageRequestVo) {
+        ResponseVo<Object> objectResponseVo = new ResponseVo<>();
+
+        UpdateWrapper<Admin> adminUpdateWrapper = new UpdateWrapper<>();
+        adminUpdateWrapper.eq("admin_accout",riderManageRequestVo.getAdminAccout());
+
+        Admin admin = new Admin();
+        admin.setAdminAddress(riderManageRequestVo.getAdminAddress());
+        admin.setAdminPwd(riderManageRequestVo.getAdminPwd());
+        admin.setAdminPhoto(riderManageRequestVo.getAdminPhoto());
+
+        adminService.update(admin,adminUpdateWrapper);
+
+        return objectResponseVo;
+    }
+
+
+    //最高权限管理界面
+    @RequestMapping("/rootManage")
+    public String adminRootManage() {
+        return  "/admin/rootManage";
+    }
+
+    //查询最高权限
+    @ResponseBody
+    @RequestMapping("/rootManageNumber")
+    public List<Admin> rootManageNumber(AdminRiderManageRequestVo riderManageRequestVo) {
+
+        QueryWrapper<Admin> adminQueryWrapper = new QueryWrapper<>();
+        adminQueryWrapper.eq("admin_type","0").eq("admin_status","0");
+
+        if(riderManageRequestVo.getAdminAccout()!=null){
+            adminQueryWrapper.like("admin_accout",riderManageRequestVo.getAdminAccout());
+        }
+        if(riderManageRequestVo.getAdminName()!=null){
+            adminQueryWrapper.like("admin_name",riderManageRequestVo.getAdminName());
+        }
+        if(riderManageRequestVo.getAdminPhone()!=null){
+            adminQueryWrapper.like("admin_phone",riderManageRequestVo.getAdminPhone());
+        }
+        if(riderManageRequestVo.getAdminGender()!=null){
+            adminQueryWrapper.like("admin_gender",riderManageRequestVo.getAdminGender());
+        }
+        if(riderManageRequestVo.getAdminAddress()!=null){
+            adminQueryWrapper.like("admin_address",riderManageRequestVo.getAdminAddress());
+        }
+
+        List<Admin> list = adminService.list(adminQueryWrapper);
+
+        return  list;
+    }
+
+    //修改最高权限客户状态
+    @ResponseBody
+    @RequestMapping("/rootManageNumber/update")
+    public ResponseVo rootManageNumberNumberUpdate(AdminRiderManageRequestVo riderManageRequestVo) {
+        ResponseVo<Object> objectResponseVo = new ResponseVo<>();
+
+        UpdateWrapper<Admin> adminUpdateWrapper = new UpdateWrapper<>();
+        adminUpdateWrapper.eq("admin_accout",riderManageRequestVo.getAdminAccout());
+
+        Admin admin = new Admin();
+        admin.setAdminAddress(riderManageRequestVo.getAdminAddress());
+        admin.setAdminPwd(riderManageRequestVo.getAdminPwd());
+        admin.setAdminPhoto(riderManageRequestVo.getAdminPhoto());
+
+        adminService.update(admin,adminUpdateWrapper);
+
+        return objectResponseVo;
+    }
 
 
 }

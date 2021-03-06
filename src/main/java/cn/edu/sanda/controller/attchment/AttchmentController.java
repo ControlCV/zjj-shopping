@@ -8,7 +8,9 @@ import cn.edu.sanda.vo.ResponseVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,12 +28,27 @@ public class AttchmentController {
     @Autowired
     private AdminService adminService;
 
+
+    @Value("${file.upload.path}")
+    private String filePath;
+
+    @Value("${file.upload.mapping.path}")
+    private String mappingPath;
+
     //头像上传
     @ResponseBody
     @RequestMapping(value = {"/headImageUpload"},method = RequestMethod.POST)
-    public ResponseVo attchmentHeadImageUpload(@RequestParam("file") MultipartFile file,HttpServletRequest request) {
+    public ResponseVo attchmentHeadImageUpload(@RequestParam(value = "file",required = false) MultipartFile file) {
 
         ResponseVo<Object> objectResponseVo = new ResponseVo<>();
+
+
+        //上传文件不能为空
+        if(ObjectUtils.isEmpty(file)){
+            objectResponseVo.setCode("500");
+            objectResponseVo.setMsg("文件不能为空");
+            return objectResponseVo;
+        }
 
         try {
             //在文件下面生成文件夹
@@ -40,7 +57,7 @@ public class AttchmentController {
             //生成时间
             String sj = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             //生成时间文件夹
-            String path = "D:\\zjj-graduation-project\\manage\\src\\main\\resources\\static\\file\\"+sj;
+            String path =filePath +sj;
             File f = new File(path);
             if(!f.exists()){
                 f.mkdirs();
@@ -57,13 +74,8 @@ public class AttchmentController {
 
             file.transferTo(newFile);
 
-            //将文件名存入到数据库
-//            UpdateWrapper<Admin> adminQueryWrapper = new UpdateWrapper<>();
-//            adminQueryWrapper.eq("admin_account",admin.getAdminAccout()).set("admin_photo",path+"/"+newfilename);
-//            adminService.update(adminQueryWrapper);
-
             HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("filePath",path+"/"+newfilename);
+            hashMap.put("filePath",mappingPath+sj+"/"+newfilename);
 
 
             objectResponseVo.setCode("200");
