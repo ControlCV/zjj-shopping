@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>后台管理系统</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" th:href="@{../plugins/fontawesome-free/css/all.min.css}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" th:href="@{../plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css}">
+  <!-- iCheck -->
+  <link rel="stylesheet" th:href="@{../plugins/icheck-bootstrap/icheck-bootstrap.min.css}">
+  <!-- JQVMap -->
+  <link rel="stylesheet" th:href="@{../plugins/jqvmap/jqvmap.min.css}">
+  <!-- Theme style -->
+  <link rel="stylesheet" th:href="@{../dist/css/adminlte.min.css}">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" th:href="@{../plugins/overlayScrollbars/css/OverlayScrollbars.min.css}">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" th:href="@{../plugins/daterangepicker/daterangepicker.css}">
+  <!-- summernote -->
+  <link rel="stylesheet" th:href="@{../plugins/summernote/summernote-bs4.min.css}">
+</head>
+<body>
+
+    <div style="height: 10px"></div>
+
+    <div class="container-fluid">
+    <div class="card card-primary card-outline">
+        <div class="card-body">
+
+            <div class="input-group mb-3  input-medium">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">工号</span>
+                </div>
+                <input type="text" class="form-control " placeholder="请输入客户账号"  id="adminAccout" name="工号">
+
+                <div style="width: 10px"></div>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">姓名</span>
+                </div>
+                <input type="text" class="form-control  "  placeholder="请输入客户姓名" id="adminName" name="姓名">
+
+                <div style="width: 10px"></div>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">邮箱</span>
+                </div>
+                <input type="text" class="form-control " placeholder="请输入客户邮箱"  id="adminPhone" name="邮箱">
+
+            </div>
+
+            <div class="input-group mb-3  input-medium">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">性别</span>
+                </div>
+                <input type="text" class="form-control " placeholder="请输入客户性别"  id="adminGender" name="性别">
+
+                <!--                        <div class="col-md-6"></div>-->
+                <div style="width: 10px"></div>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">定位地区</span>
+                </div>
+                <select class="form-control" id="adminAddress">、
+                    <option></option>
+                    <option>杉达嘉善校区</option>
+                    <option>杉达金海校区</option>
+                    <option>二工大校区</option>
+                    <option>上海戏剧学校分校</option>
+                    <option>宝龙广场</option>
+                </select>
+<!--                <input type="text" class="form-control " placeholder="请输入客户定位地区"  id="adminAddress" name="邮箱">-->
+
+                <div style="width: 10px"></div>
+                <button type="button" style="width: 200px" id="searchbtn" class="btn btn-primary" >查询</button>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+    <div class="container-fluid">
+    <div class="card-body" style="height: 1000px">
+
+        <table  class="table  table-striped" id="admintable" ></table>
+
+    </div>
+    </div>
+
+    <!-- common-JS -->
+    <div th:replace="admin/header::js-body"></div>
+    <!-- /common-JS -->
+
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        客户信息重置
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title"></h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+<!--                        <form >-->
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label >账号</label>
+                                    <input class="form-control" id="accountNo" type="text" placeholder="该输入框禁止输入..." disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label >重置密码</label>
+                                    <input type="输入客户新密码" class="form-control" id="reSetPwd" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <label >重置定位地区</label>
+                                    <select class="form-control" id="reSetAddress">
+                                        <option>杉达嘉善校区</option>
+                                        <option>杉达金海校区</option>
+                                        <option>二工大校区</option>
+                                        <option>上海戏剧学校分校</option>
+                                        <option>宝龙广场</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="fa-file-photo-o" id="file">
+                                        <button type="button" class="btn btn-info" style="width: 30%" id="uploadLabel">上传</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <img id="headImg" style="width: 30%;height: 20%" src="../file/fileDefult.png">
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+<!--                        </form>-->
+                    </div>
+                    
+                    <!-- /.card -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" id="allInfoSubmit" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+
+
+    <!--加载表格-->
+    <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+    <script src="https://cdn.staticfile.org/bootstrap-table/1.13.5/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script>
+        $(document).ready(function () {
+             getTable();
+        })
+
+        $("#searchbtn").click(function () {
+            var adminAccout =$('#adminAccout').val();
+            var adminName =$('#adminName').val();
+            var adminPhone =$('#adminPhone').val();
+            var adminGender =$('#adminGender').val();
+            var adminAddress =$('#adminAddress').val();
+            
+            $('#admintable').bootstrapTable('refresh',{
+                query:
+                    {
+                        "adminAccout":adminAccout,
+                        "adminName":adminName,
+                        "adminPhone":adminPhone,
+                        "adminGender":adminGender,
+                        "adminAddress":adminAddress
+                    }
+            });
+
+        })
+
+        function getTable(){
+                $('#admintable').bootstrapTable({
+                    method: 'GET',
+                    url: '../admin/customerManageNumber',
+                    toolbar: "#toolbar",
+                    uniqueId: "id",
+                    pagination: true,//是否分页
+                    sidePagination: 'client',//server:服务器端分页|client：前端分页
+                    pageSize: 10,//单页记录数
+                    pageList: [3, 5, 10],//可选择单页记录数
+
+
+                    columns: [
+                        {
+                            field: 'adminAccout',
+                            title:'客户账户',
+                            align: 'center',
+                        },
+                        {
+                            field: 'adminPhoto',
+                            title:'客户头像',
+                            align: 'center',
+                            formatter : function(value, row, index) {
+                                var image = '<img style="width: 60px;height: 60px" class="feed-photo" src='+value+'>'
+                                ;
+                                return image;
+                            }
+                        },{
+                            field: 'adminName',
+                            title:'客户姓名',
+                            align: 'center',
+                        },{
+                            field: 'adminPhone',
+                            title:'客户邮箱',
+                            align: 'center',
+                        }, {
+                            field: 'adminGender',
+                            title:'客户性别',
+                            align: 'center',
+                            formatter: function (value, row, index) {
+                                if(value==1){
+                                    return "女";
+                                }else {
+                                    return "男";
+                                }
+                            }
+                        },{
+                            field: 'adminAddress',
+                            title:'负责地区',
+                            align: 'center',
+                        },{
+                            field: 'adminStatus',
+                            title: '操作',
+                            align: 'center',
+                            events: operateEvents,
+                            formatter: function (value, row, index) {
+                                var html = "<button type='button' id='disablebtn' class='btn btn-danger btn-sm' >删除</button>&nbsp;&nbsp;<button type='button'  id='updatebtn' class='btn  btn-info btn-sm'>重置信息</button>&nbsp;&nbsp;";
+                                return html;
+                            }
+                        }
+                    ]
+
+                })
+        }
+
+        window.operateEvents = {
+            'click #disablebtn': function (e, value, row, index) {
+                var adminAccout=row.adminAccout;
+                var adminStatus=row.adminStatus;
+                $.ajax({
+                    type:'post',
+                    url:'../adminOperate/reverseStatus',
+                    data:{"adminAccout":adminAccout,"adminStatus":adminStatus},
+                    success:function(data){
+                        if(data.code=200){
+                            alert("账号为"+adminAccout+"的客户信息已被删除");
+                            $('#admintable').bootstrapTable('refresh');
+                        }
+
+                    }
+                })
+            },
+
+            'click #updatebtn': function (e, value, row, index) {
+                $('#accountNo').val(row.adminAccout);
+                $('#myModal').modal();
+            }
+        };
+
+
+        <!--文件上传-->
+        $("#uploadLabel").click(function () {
+            var formData = new FormData();
+            formData.append('file', $('#file')[0].files[0]);
+            $.ajax({
+                url: '../attchment/headImageUpload',
+                type: 'post',
+                cache: false,
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (data) {
+                    if (data.code == "200") {
+                        $('#headImg').attr('src', data.data.filePath);
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+            })
+
+        })
+
+
+    </script>
+    <script>
+        <!--内容上传-->
+        $("#allInfoSubmit").click(function () {
+            var adminAccout =$('#accountNo').val();
+            var adminPwd =$('#reSetPwd').val();
+            var adminAddress =$('#reSetAddress').val();
+            var adminPhoto=$("#headImg").attr("src");
+
+            $.ajax({
+                url:'../admin/customerManageNumber/update',
+                type: 'get',
+                dataType:'json',
+                data:{
+                    "adminAccout":adminAccout,
+                    "adminPwd":adminPwd,
+                    "adminAddress":adminAddress,
+                    "adminPhoto":adminPhoto},
+                success: function (data) {
+                    $('#myModal').modal('hide');
+                    $('#admintable').bootstrapTable('refresh');
+                    $('#reSetPwd').val("");
+                    $('#reSetAddress').val("");
+                    $('#file').val("");
+                    $("#headImg").attr('src',"http://localhost:8383/file/fileDefult.png");
+
+                }
+            })
+
+
+
+        })
+    </script>
+
+
+
+</body>
+</html>
